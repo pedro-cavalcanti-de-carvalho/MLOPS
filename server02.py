@@ -8,7 +8,7 @@ server = FastAPI()
 model = joblib.load("modelo_kmeans.pkl")
 
 
-@server.post("/predict")
+@server.post("/predict2")
 async def predict(file: UploadFile):
     contents = await file.read()
     np_array = np.frombuffer(contents, dtype=np.float64)
