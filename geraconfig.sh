@@ -3,14 +3,14 @@ echo '{                                                     ' >  config/microser
 echo '    "modelo01": {                                     ' >> config/microservices.json
 echo '      "version": "V01",                               ' >> config/microservices.json
 echo '      "url": "http://'$(sudo docker inspect servidor001 | python3 -c "import sys, json; print(json.load(sys.stdin)[0]['NetworkSettings']['Networks']
-['plat_network']['IPAddress'])")':8080/predict"          ' >> config/microservices.json
+['rede_trabalho']['IPAddress'])")':8080/predict"            ' >> config/microservices.json
 echo '    },                                                ' >> config/microservices.json
 echo '    "modelo02": {                                     ' >> config/microservices.json
 echo '      "version": "V01",                               ' >> config/microservices.json
 echo '      "url": "http://'$(sudo docker inspect servidor002 | python3 -c "import sys, json; print(json.load(sys.stdin)[0]['NetworkSettings']['Networks']
-['plat_network']['IPAddress'])")':8080/predict"          ' >> config/microservices.json
+['rede_trabalho']['IPAddress'])")':8080/predict2"           ' >> config/microservices.json
 echo '    }                                                 ' >> config/microservices.json
-echo '}                                                   ' >> config/microservices.json
+echo '}                                                     ' >> config/microservices.json
 
 echo "Arquivo de configuração atualizado com sucesso. Veja seu conteúdo: "
 
