@@ -1,30 +1,54 @@
-from fastapi import FastAPI, File, UploadFile
-import joblib
-import numpy as np
+ import http.server
+ import socketserver
+ import pickle
+ import json
+ from http import HTTPStatus
 
-server = FastAPI()
+ class MyHandler(http.server.SimpleHTTPRequestHandler):
+     def do_POST(self):
+         content_length = int(self.headers['Content-Length'])
 
-# Carregue o modelo
-model = joblib.load("modelo_kmeans.pkl")
+         post_data = self.rfile.read(content_length)
 
+#         # Carregue o modelo aqui
+         model = pickle.load(open('modelo_kmeans.pkl', 'rb'))
 
-@server.post("/predict2")
-async def predict(file: UploadFile):
-    contents = await file.read()
-    np_array = np.frombuffer(contents, dtype=np.float64)
-    
-    # Faça a predição usando o modelo carregado
-    persona = model.predict(np_array.reshape(1, -1))
+         # Lógica de predição aqui (exemplo: sempre retorna 0)
+         # Substitua essa lógica com a lógica real de predição
+         input_data = pickle.loads(post_data)
+         prediction = model.predict([input_data])
+         cluster = str(prediction)
+         if prediction == 0:
+             fraude_media = 28.923973
+             persona = 'Renda Média sem cadastro de sexo e do Sul'
+         if prediction == 1:
+             fraude_media = 25.752149
+             persona = 'Renda Média Homens Jovens'
+         if prediction == 2:
+             fraude_media = 23.738199
+             persona = 'Renda Alta Jovens do Sul'
+         if prediction == 3:
+             fraude_media = 18.84012
+             persona = 'Renda Alta Não Binário'
+         if prediction == 4:
+             fraude_media = 25.304336
+             persona = 'Renda Baixa Mulheres'
 
-    if persona == 0:
-        fraude_media = 0.34631
-    if persona == 1:
-        fraude_media = 0.197401
-    if persona == 2:
-        fraude_media = 0.107506
-    if persona == 3:
-        fraude_media = 0.340295
-    if persona == 4:
-        fraude_media = 0.221605
+         result = {
+             'Cluster': cluster,
+             'Probabilidade de Fraude': fraude_media,
+             'Persona': persona
+         }
 
-    return {"Cluster": persona, "Fraude Média": fraude_media}
+         # Envie a resposta para o cliente
+         self.send_response(HTTPStatus.OK)
+         self.send_header('Content-type', 'text/plain')
+         self.end_headers()
+         self.wfile.write(str(result).encode())
+
+ if __name__ == "__main__":
+     PORT = 8000
+
+     with socketserver.TCPServer(("", PORT), MyHandler) as httpd:
+         print(f"Serving on port {PORT}")
+         httpd.serve_forever()
