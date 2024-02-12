@@ -5,8 +5,8 @@ WORKDIR /MLOPS
 
 COPY requirements.txt .
 COPY model.pkl .
-COPY modelo_kmeans.pkl .
-COPY server01.py .
+#COPY modelo_kmeans.pkl .
+COPY server.py .
 
 # Expõe para o HOST algumas portas, por padrão
 EXPOSE 8000
