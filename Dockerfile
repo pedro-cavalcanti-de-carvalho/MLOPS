@@ -11,6 +11,6 @@ COPY server.py .
 # Expõe para o HOST algumas portas, por padrão
 EXPOSE 8000
 RUN pip install --upgrade pip
-RUN pip install requirements.txt
+RUN pip install -r requirements.txt
 
 CMD ["python", "server.py"]
