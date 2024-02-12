@@ -12,4 +12,4 @@ COPY server01.py .
 EXPOSE 8000
 RUN pip install requirements.txt
 
-CMD ["python", "server01.py"]
+CMD ["python", "server.py"]
